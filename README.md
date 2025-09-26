@@ -10,7 +10,7 @@
 
 [![](https://github.com/litex-hub/litex-boards/workflows/ci/badge.svg)](https://github.com/litex-hub/litex-boards/actions) ![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
 
-[> Intro
+[> Intro : Microsemi Edition
 --------
 <figure>
 <p align="center">
@@ -47,7 +47,7 @@ You can then open a terminal on the main UART of the board and interact with the
 - Add `--no-compile-software` to disable the Software compilation.
 - Add `--no-compile-gateware` to disable the Gateware compilation.
 
-But this is just the starting point to create your own hardware! You can then:
+ But this is just the starting point to create your own hardware! You can then:
 
 - Change the CPU: add `--cpu-type=lm32, microwatt, serv, rocket, etc... `
 - Change the Bus standard: add `--bus-standard=wishbone, axi-lite`
