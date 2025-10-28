@@ -25,12 +25,24 @@ _io = [
        #("user_sw",   1, Pins("H13"), IOStandard("LVCMOS33")),
        #("user_sw",   2, Pins("M15"),  IOStandard("LVCMOS33")),
        #("user_sw",   3, Pins("N15"),  IOStandard("LVCMOS33")),
+
+       ("DEVRESET_N" , 0, Pins("M11")),  #
        
        ("serial", 0,
         Subsignal("tx", Pins("G3")),
         Subsignal("rx", Pins("H3")),
         IOStandard("LVCMOS33"),
        ),
+
+
+       ("jtag", 0,
+        Subsignal("tck", Pins("R14")),
+        Subsignal("tms", Pins("N11")),
+        Subsignal("tdo", Pins("P14")),
+        Subsignal("tdi", Pins("P16")),
+        Subsignal("trstb", Pins("N13")),
+        
+    ),
        
        
        ("spiflash", 0,
@@ -67,7 +79,36 @@ _io = [
        ("clk50",     0, Pins("H16"), IOStandard("LVCMOS33")),
        # SW1 Switch on board is reset input
        ("user_btn2", 0, Pins("H12"), IOStandard("LVCMOS33")),
-       ("user_btn1", 0, Pins("H13"), IOStandard("LVCMOS33")), 
+       ("user_btn1", 0, Pins("H13"), IOStandard("LVCMOS33")),
+
+
+
+       
+       
+       ("axi_aclk_out", 0, Pins(1)),
+       ("axi_arstn_out", 0, Pins(1)),
+       
+       ("axi",0,
+        Subsignal('awvalid', Pins(1)),
+        Subsignal('awready', Pins(1)),
+        Subsignal('awaddr', Pins(32)),
+        Subsignal('awprot', Pins(3)),
+        Subsignal('wvalid', Pins(1)),
+        Subsignal('wready', Pins(1)),
+        Subsignal('wdata', Pins(32)),
+        Subsignal('wstrb', Pins(4)),
+        Subsignal('bvalid', Pins(1)),
+        Subsignal('bready', Pins(1)),
+        Subsignal('bresp', Pins(2)),
+        Subsignal('arvalid', Pins(1)),
+        Subsignal('arready', Pins(1)),
+        Subsignal('araddr', Pins(32)),
+        Subsignal('arprot', Pins(3)),
+        Subsignal('rvalid', Pins(1)),
+        Subsignal('rready', Pins(1)),
+        Subsignal('rresp', Pins(2)),
+        Subsignal('rdata', Pins(32)),
+    ),
 ]
 
 # Connectors ---------------------------------------------------------------------------------------
@@ -85,7 +126,7 @@ class Platform(MicrosemiPlatform):
     default_clk_name   = "clk50"
     default_clk_period = 1e9/50e6
 
-    def __init__(self, device="M2S025-VF256", toolchain="libero_soc"):
+    def __init__(self, device="M2S025-VF256-STD", toolchain="libero_soc"):
         
         MicrosemiPlatform.__init__(self, device, _io, _connectors, toolchain=toolchain)
 
