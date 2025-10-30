@@ -17,6 +17,22 @@ from litex.build.microsemi.programmer import FlashProExpressProgrammer
   
 
 _io = [
+
+       ("clk50",     0, Pins("H16"), IOStandard("LVCMOS33")),
+       # SW1 Switch on board is reset input
+
+
+       # SW1 and SW2 are active high input, SW1 is used as high reset input  for processor
+
+       ("user_sw1", 0, Pins("H12"), IOStandard("LVCMOS33")),
+       ("user_sw2", 0, Pins("H13"), IOStandard("LVCMOS33")),
+
+
+       #  same as the SW1  & SW@ , only for older projects which uses this name , remove later
+       ("user_btn2", 0, Pins("H12"), IOStandard("LVCMOS33")),
+       ("user_btn1", 0, Pins("H13"), IOStandard("LVCMOS33")),
+
+
        ("user_led",  0, Pins("J16"), IOStandard("LVCMOS33")),
        ("user_led",  1, Pins("K16"), IOStandard("LVCMOS33")),
        ("user_led",  2, Pins("M16"), IOStandard("LVCMOS33")),
@@ -76,10 +92,7 @@ _io = [
        
        
        
-       ("clk50",     0, Pins("H16"), IOStandard("LVCMOS33")),
-       # SW1 Switch on board is reset input
-       ("user_btn2", 0, Pins("H12"), IOStandard("LVCMOS33")),
-       ("user_btn1", 0, Pins("H13"), IOStandard("LVCMOS33")),
+       
 
 
 
