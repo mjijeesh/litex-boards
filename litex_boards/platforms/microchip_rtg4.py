@@ -47,7 +47,7 @@ _io = [
        ("serial", 0,
         Subsignal("tx", Pins("E28")),
         Subsignal("rx", Pins("E27")),
-        IOStandard("LVCMOS25"),
+        IOStandard("LVCMOS33"),
        ),
 
 
@@ -60,14 +60,19 @@ _io = [
         
     ),
        
-       
+       ### This is spiflash0
+
        ("spiflash", 0,
-        Subsignal("cs_n", Pins("J12")),
-        Subsignal("clk", Pins("J14")),
-        Subsignal("mosi", Pins("K12")),
-        Subsignal("miso", Pins("J13")),
+        Subsignal("cs_n", Pins("C33")),
+        Subsignal("clk",  Pins("C34")),
+        Subsignal("mosi", Pins("H27")),
+        Subsignal("miso", Pins("H28")),
         IOStandard("LVCMOS33")
        ),
+       # separate resource for the WP  and Hold pin.
+       ("spiflash_wp_n",   0, Pins("F30"), IOStandard("LVCMOS33")),    
+       ("spiflash_hold_n", 0, Pins("C36"), IOStandard("LVCMOS33")),
+
        
        #swapping the mosi and miso pins for testing 
        ("spiflash_swap", 0,
@@ -78,11 +83,23 @@ _io = [
         IOStandard("LVCMOS33")
        ),
     
-        # separate resource for the WP  and Hold pin.
-       ("spiflash_wp_n",   0, Pins("H14"), IOStandard("LVCMOS33")),    
-       ("spiflash_hold_n", 0, Pins("G16"), IOStandard("LVCMOS33")),
+        ### This is spiflash1
+
+       ("spiflash1", 0,
+        Subsignal("cs_n", Pins("C39")),
+        Subsignal("clk",  Pins("B39")),
+        Subsignal("mosi", Pins("H31")),
+        Subsignal("miso", Pins("H32")),
+        IOStandard("LVCMOS33")
+       ),
+
+
+       # separate resource for the WP  and Hold pin.
+       ("spiflash1_wp_n",   0, Pins("G34"), IOStandard("LVCMOS33")),    
+       ("spiflash1_hold_n", 0, Pins("D36"), IOStandard("LVCMOS33")),
        
        
+       ### not fixed so far
        ("spiflash4x", 0,
         Subsignal("cs_n", Pins("J12")),
         Subsignal("clk", Pins("J14")),
@@ -139,7 +156,7 @@ class Platform(MicrosemiPlatform):
     default_clk_name   = "clk50"
     default_clk_period = 1e9/50e6
 
-    def __init__(self, device="RT4G150_ES-CG1657", toolchain="libero_soc"):
+    def __init__(self, device="RT4G150_ES-CG1657M", toolchain="libero_soc"):
         
         MicrosemiPlatform.__init__(self, device, _io, _connectors, toolchain=toolchain)
 
@@ -150,3 +167,15 @@ class Platform(MicrosemiPlatform):
     def do_finalize(self, fragment):
         MicrosemiPlatform.do_finalize(self, fragment)
         self.add_period_constraint(self.lookup_request("clk50", loose=True), 1e9/50e6)
+
+        ##  I/O Bank voltages for the board is specified here.
+        self.toolchain.additional_io_constraints +=[
+           
+         "set_iobank  bank0 -vcci 1.5V -fixed yes ",  
+         "set_iobank  bank1 -vcci 2.5V -fixed yes ", 
+         "set_iobank  bank3 -vcci 3.3V -fixed yes ", 
+         "set_iobank  bank4 -vcci 3.3V -fixed yes ", 
+         "set_iobank  bank9 -vcci 1.5V -fixed yes ", 
+        ]
+        
+
