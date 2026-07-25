@@ -6,7 +6,7 @@
 
 from litex.build.generic_platform import *
 from litex.build.microsemi import MicrosemiPlatform
-from litex.build.microsemi.programmer import FlashProExpressProgrammer
+from litex.build.microsemi.programmer import  LiberoProgrammer
 
 # IOs ----------------------------------------------------------------------------------------------
 
@@ -59,6 +59,7 @@ _io = [
 
     # 3. A new, separate resource for the Hold pin.
     ("spiflash_hold_n", 0, Pins("A22"), IOStandard("LVCMOS18")),
+    ("spiflash_reset_n", 0, Pins("A24"), IOStandard("LVCMOS18")),
     
     ("spiflash4x", 0,
         Subsignal("clk",  Pins("H19")),
@@ -68,20 +69,7 @@ _io = [
      
     ),
 
-    # This is he PF_SPI ports 
     
-    ("spiflash_dedicated", 0,
-        Subsignal("clk",  Pins("G3")),
-        Subsignal("cs_n", Pins("G4")),
-        Subsignal("mosi", Pins("G5")),
-        Subsignal("miso", Pins("G10")),
-        # These connect to the FLASH and IFACE ports of the macro
-        Subsignal("flash", Pins("H10")),
-        Subsignal("iface", Pins("G9")),
-        IOStandard("LVCMOS25") # Or the correct I/O standard
-    ),
-
-
     ##### Below ports are not tested, needs to verify.
     
         
@@ -159,12 +147,26 @@ class Platform(MicrosemiPlatform):
     default_clk_name   = "clk50"
     default_clk_period = 1e9/50e6
 
-    def __init__(self, device="MPF300T-FCG1152-1", toolchain="libero_soc"):
+    def __init__(self, device="MPF300T-1FCG1152I", toolchain="libero_soc"):
         MicrosemiPlatform.__init__(self, device, _io, toolchain=toolchain)
+        
+        # Add any IOBANK voltage settings here for the board .        
+        self.add_platform_command("set_iobank -bank_name bank0 -vcci 1.2  -fixed true")
+        self.add_platform_command("set_iobank -bank_name bank1 -vcci 1.5  -fixed true")
+        #self.add_platform_command("set_iobank Bank2 -vcci 2.5  -fixed true")
+        self.add_platform_command("set_iobank -bank_name Bank3 -vcci 2.5 -fixed true")
+        self.add_platform_command("set_iobank -bank_name Bank6 -vcci 1.8 -fixed true")
+    
+    # Intercept platform commands to feed your custom toolchain logic
+    def add_platform_command(self, command, **kwargs):
+        if "set_iobank" in command:
+            self.toolchain.additional_iobank_constraints.append(command)
+        else:
+            super().add_platform_command(command, **kwargs)
         
     def create_programmer(self):
         """Create a programmer for this platform."""
-        return FlashProExpressProgrammer(device=self.device)
+        return LiberoProgrammer(build_dir=None, build_name=None)
 
     def do_finalize(self, fragment):
         MicrosemiPlatform.do_finalize(self, fragment)
