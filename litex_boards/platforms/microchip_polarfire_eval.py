@@ -105,15 +105,15 @@ _io = [
     ),
 
     # --- Corrected DDR3 Definitions ---
-    ("ddram", 0,
+    ("ddr3", 0,
         Subsignal("a", Pins(
             "AL27 AL26 AM27 AN27 AN26 AP25 AL25 AK25 AJ23 AH23 "
             "AJ25 AJ24 AL22 AK23 AL24 AL23"
         )),
         Subsignal("ba",      Pins("AE25 AD23 AD25")),
         Subsignal("cas_n",   Pins("AF25")),
-        Subsignal("clk_p",   Pins("AP26")),
-        Subsignal("clk_n",   Pins("AP27")),
+        Subsignal("ck_p",   Pins("AP26")),
+        Subsignal("ck_n",   Pins("AP27")),
         Subsignal("cke",     Pins("AF22")),
         Subsignal("cs_n",    Pins("AE22")),
         Subsignal("dm",      Pins("AN23 AL20")),
@@ -130,7 +130,7 @@ _io = [
         IOStandard("SSTL15II"),
     ),
 
-    ("ddram_shield", 0,
+    ("ddr3_shield", 0,
         Pins("AM22 AM20"),
         IOStandard("SHIELD15"),
     ),
